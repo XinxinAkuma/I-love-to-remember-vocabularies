@@ -8,7 +8,6 @@ import (
 	"github.com/joho/godotenv"
 	"io"
 	"log"
-	"math/rand"
 	"net/http"
 	"os"
 	"regexp"
