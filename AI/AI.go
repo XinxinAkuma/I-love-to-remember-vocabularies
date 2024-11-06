@@ -122,13 +122,6 @@ func GetAnswers(ques *model.Mode) (*model.Result, error) {
 	res.PaperId = ques.PaperId
 	res.Type = ques.Type
 	res.List = allAnswers
-	//生成随机数改答案 防止分数过高,若不需要删除以下代码即可。
-	rand.Seed(time.Now().UnixNano())
-	for i := 0; i < 5; i++ {
-		randomNumber := rand.Intn(100)
-		res.List[randomNumber].Input = "A"
-		fmt.Println("paperDetailedID: ", res.List[randomNumber].PaperDetailId, "input: ", res.List[randomNumber].Input)
-	}
 
 	fmt.Println("-----------------------------------------------------------")
 	fmt.Println("res: ", res)
