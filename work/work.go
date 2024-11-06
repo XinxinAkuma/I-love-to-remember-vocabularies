@@ -41,7 +41,12 @@ func RequestQuestion(token string, week int, mode string) *model.Mode {
 	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
-
+	if err != nil {
+		panic(err)
+	}
+	if resp.StatusCode != 200 {
+		panic("bad status code: " + resp.Status)
+	}
 	q := new(model.Mode)
 	if err := json.Unmarshal(body, q); err != nil {
 		panic(err)
