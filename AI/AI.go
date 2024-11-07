@@ -45,7 +45,7 @@ func GetAnswers(ques *model.Mode) (*model.Result, error) {
 
 		text := ConvertToText(ques, i, end)
 		messages := []model.Message{
-			{Role: "user", Content: "我会给你5题翻译题，需要你输出每个翻译题正确答案的选项，给我返回格式为`x-x-x-x-x`的答案，x表示正确答案的选项，不需要给出额外输出。题目如下：" + text},
+			{Role: "user", Content: "我会给你5题翻译题，需要你输出每个翻译题正确答案的选项，给我返回格式为`x-x-x-x-x`的答案，x表示正确答案的选项，不需要解释，且遇到一词多义现象请认真思考。题目如下：" + text},
 		}
 
 		reqBody := model.RequestBody{
@@ -73,7 +73,12 @@ func GetAnswers(ques *model.Mode) (*model.Result, error) {
 			return nil, fmt.Errorf("error executing request: %w", err)
 		}
 
-		defer resp.Body.Close()
+		defer func(Body io.ReadCloser) {
+			err := Body.Close()
+			if err != nil {
+
+			}
+		}(resp.Body)
 
 		if resp.StatusCode != 200 {
 			return nil, fmt.Errorf("failed to get answer: status code %d", resp.StatusCode)
@@ -124,7 +129,7 @@ func GetAnswers(ques *model.Mode) (*model.Result, error) {
 
 	fmt.Println("-----------------------------------------------------------")
 	fmt.Println("res: ", res)
-	fmt.Println("please wait for" + timeStr + " seconds to submit the paper")
+	fmt.Println("please wait for " + timeStr + " seconds to submit the paper")
 	subTime, _ := strconv.Atoi(timeStr)
 	time.Sleep(time.Duration(subTime) * time.Second)
 	fmt.Println("-----------------------------------------------------------")
@@ -138,7 +143,6 @@ func Rematch(resp string) ([]string, bool) {
 	re := regexp.MustCompile(pattern)
 
 	matches := re.FindAllString(resp, -1)
-
 	//for _, match := range matches {
 	//	fmt.Println("match: ", match)
 	//}
