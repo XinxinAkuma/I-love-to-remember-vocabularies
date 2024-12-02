@@ -8,6 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"io"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"regexp"
@@ -126,6 +127,18 @@ func GetAnswers(ques *model.Mode) (*model.Result, error) {
 	res.PaperId = ques.PaperId
 	res.Type = ques.Type
 	res.List = allAnswers
+
+	source := rand.NewSource(time.Now().UnixNano())
+	r := rand.New(source)
+	limit, _ := strconv.Atoi(os.Getenv("RANDOM"))
+	for i := 0; i < limit; i++ {
+		randomInt := r.Intn(100)
+		for res.List[randomInt].Input == "" {
+			randomInt = r.Intn(100)
+		}
+		res.List[randomInt].Input = ""
+		fmt.Println(res.List[randomInt].PaperDetailId, res.List[randomInt].Input)
+	}
 
 	fmt.Println("-----------------------------------------------------------")
 	fmt.Println("res: ", res)
