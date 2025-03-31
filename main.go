@@ -10,13 +10,18 @@ import (
 
 func main() {
 	err := godotenv.Load("./secret.env")
+
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	tokens := os.Getenv("TOKENS")
+	croypto, execution, session, encryptedPassword := work.GetNecessary("xxxxxx")
+
+	tokens := work.Login("xxxxxx", croypto, execution, session, encryptedPassword)
+
 	weekStr := os.Getenv("WEEK")
+
 	week, _ := strconv.Atoi(weekStr)
 	mode := os.Getenv("MODE")
-	work.Final(tokens, week, mode)
+	work.Final(tokens[1], week, mode)
 }
